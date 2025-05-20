@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Cleaner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 25px;
+            color: #444;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            background: #fff;
+            width: 100%;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        #submit-btn {
+            padding: 12px 30px;
+            background: #7c4dff;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #submit-btn:hover {
+            background: #651fff;
+        }
+
+        #cleaning-msg {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #00796b;
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>CSV Cleaner</h1>
+        <p>Upload a CSV file. We'll clean it for you in seconds.</p>
+
+        <input id="user_file" type="file" accept=".csv">
+        <button id="submit-btn">Clean My CSV</button>
+
+        <div id="cleaning-msg">
+            <p>Cleaning... please wait ⏳</p>
+        </div>
+    </div>
+
+    <script src="../static/connector.js"></script>
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', showCleanMsg);
+
+        function showCleanMsg(){
+            document.getElementById('cleaning-msg').style.display = "block";
+        }
+    </script>
+</body>
+</html>
