@@ -1,110 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>CSV Cleaner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+  <meta charset="UTF-8">
+  <title>CSV Cleaner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #e0f7fa, #e1bee7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      color: #f1f1f1;
+      animation: fadeIn 1.5s ease-in;
+    }
 
-        .container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            color: #333;
-        }
+    .container {
+      background: rgba(25, 25, 35, 0.85);
+      border: 1px solid #333;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 50px 40px;
+      width: 100%;
+      max-width: 550px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
+    .container:hover {
+      transform: translateY(-5px);
+    }
 
-        p {
-            font-size: 1rem;
-            margin-bottom: 25px;
-            color: #444;
-        }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      color: #ffffff;
+      background: linear-gradient(45deg, #9f44d3, #00c9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        input[type="file"] {
-            padding: 10px;
-            border: 2px dashed #aaa;
-            border-radius: 10px;
-            background: #fff;
-            width: 100%;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
+    p {
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+      color: #cfd8dc;
+    }
 
-        #submit-btn {
-            padding: 12px 30px;
-            background: #7c4dff;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+    input[type="file"],
+    input[type="text"] {
+      padding: 12px 16px;
+      border: 2px dashed #444;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      width: 100%;
+      font-size: 1rem;
+      color: #e0e0e0;
+      margin-bottom: 24px;
+      transition: border-color 0.3s, background 0.3s;
+    }
 
-        #submit-btn:hover {
-            background: #651fff;
-        }
+    input[type="file"]:hover,
+    input[type="text"]:hover {
+      border-color: #7c4dff;
+      background: rgba(255, 255, 255, 0.05);
+    }
 
-        #cleaning-msg {
-            margin-top: 20px;
-            font-size: 1rem;
-            color: #00796b;
-            display: none;
-            animation: fadeIn 0.5s ease forwards;
-        }
+    #submit-btn {
+      padding: 14px 36px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    #submit-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(122, 94, 255, 0.6);
+    }
+
+    .user-rule {
+      margin-bottom: 8px;
+      color: #b0bec5;
+      font-size: 0.95rem;
+    }
+
+    #cleaning-msg {
+      margin-top: 24px;
+      font-size: 1rem;
+      color: #00e676;
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>CSV Cleaner</h1>
-        <p>Upload a CSV file. We'll clean it for you in seconds.</p>
+  <div class="container">
+    <h1>CSV Cleaner</h1>
+    <p>Upload a CSV file. We'll clean it for you in seconds.</p>
 
-        <input id="user_file" type="file" accept=".csv">
-        <button id="submit-btn">Clean My CSV</button>
+    <input id="user_file" type="file" accept=".csv">
+    <button id="submit-btn">Clean My CSV</button>
 
-        <div id="cleaning-msg">
-            <p>Cleaning... please wait ⏳</p>
-        </div>
+    <p class="user-rule">Enter the rules you want to set for the cleaning:</p>
+    <input type="text" id="user-rule-input">
+
+    <div id="cleaning-msg">
+      <p>Cleaning... please wait ⏳</p>
     </div>
+  </div>
 
-    <script src="../static/connector.js"></script>
-    <script>
-        document.getElementById('submit-btn').addEventListener('click', showCleanMsg);
-
-        function showCleanMsg(){
-            document.getElementById('cleaning-msg').style.display = "block";
-        }
-    </script>
+  <script src="../static/connector.js"></script>
+  <script>
+    document.getElementById('submit-btn').addEventListener('click', showCleanMsg);
+    function showCleanMsg() {
+      document.getElementById('cleaning-msg').style.display = "block";
+    }
+  </script>
 </body>
 </html>

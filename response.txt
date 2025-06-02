@@ -1,0 +1,13 @@
+import pandas as pd
+
+def run():
+    df = pd.read_csv("uploads/hotel_bookings.csv")
+
+    df = df.dropna()
+
+    new_columns = df.columns.tolist()
+
+    cleaned_path = "cleaned_hotel_bookings.csv"
+    df.to_csv(cleaned_path, index=False)
+
+    return {'cleaned_path': cleaned_path, 'new_columns': new_columns}

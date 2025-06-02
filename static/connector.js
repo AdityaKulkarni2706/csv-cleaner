@@ -4,6 +4,11 @@ document.getElementById('submit-btn').addEventListener('click', async function (
     const fileInput = document.getElementById('user_file');
     const file = fileInput.files[0];
 
+    const userRule = document.getElementById('user-rule-input').value;
+
+    console.log(userRule);
+
+
     if (!file) {
         alert("Please select a file.");
         return;
@@ -11,6 +16,8 @@ document.getElementById('submit-btn').addEventListener('click', async function (
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('rule', userRule);
+
 
     try {
         const response = await fetch("/accept_file", {

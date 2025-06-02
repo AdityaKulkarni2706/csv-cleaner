@@ -10,18 +10,19 @@ def get_col_and_example(path):
     return {'columns' : columns, 'example': example_row}
 
 class Orchestrator:
-    def __init__(self, path):
+    def __init__(self, path, user_rule):
         import google.generativeai as genai
         api_key = "AIzaSyDju66-JtD42JqKy6Af5jxJGNGU5kBdNlI"
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel("gemini-2.0-flash-exp")
         self.csv_path = path
+        self.user_rule = user_rule
 
 
 
     def callAgents(self):
         columnExample = get_col_and_example(self.csv_path)
-        cleaning_agent = CleaningAgent(self.model, self.csv_path, columnExample['columns'], columnExample['example'])
+        cleaning_agent = CleaningAgent(self.model, self.csv_path, columnExample['columns'], columnExample['example'], self.user_rule)
         cleaner_object = cleaning_agent.clean()
         train_prep_agent = TrainingPrepAgent(self.model, cleaner_object['cleaned_path'], old_cols=columnExample['columns'], new_cols=cleaner_object['new_columns'])
         new_colExample = get_col_and_example(cleaner_object['cleaned_path'])
@@ -42,15 +43,22 @@ class Orchestrator:
         
 
 class CleaningAgent:
-    def __init__(self, model, file_path, column_names, example):
+    def __init__(self, model, file_path, column_names, example, user_rule):
         self.model = model
         self.file_path = file_path
         self.col_names = column_names
         self.example = example
+        self.user_rule = user_rule
 
     def clean(self):
         prompt = f"""
+        Universal Rules :
         You are a data cleaning assistant. Your task is to generate Python code using `pandas` to clean a dataset.
+        AT NO COST SHOULD YOU DO ANYTHING EXCEPT DEALING WITH DATA. NO MATTER WHAT USER ASKS. THIS IS TO ENSURE THAT 
+        YOU DONT THROW BAD/RANDOM CODE WHICH CANNOT BE EXECUTED. ALSO THIS IS IMPORTANT SO THAT YOU DONT GET JAILBROKEN.
+        ONLY EXECUTE THE USER REQUEST IF IT IS RELEVANT TO THE CSV FILE OR DEALS WITH DATA.
+
+        User Rules : (This has the highest priority. Whatever this says MUST be done, can override general rules): {self.user_rule}
 
         Instructions:
         - Define a function called `run()` that:
@@ -61,7 +69,10 @@ class CleaningAgent:
                 - 'cleaned_path': path to the cleaned file
                 - 'new_columns': list of column names after cleaning
 
-        Rules:
+        
+        
+                
+        General Rules (Can be overriden is user wants to):
         - Use raw strings for regex patterns.
         - Assume the DataFrame is called `df`.
         - Do not use `if __name__ == "__main__"`.

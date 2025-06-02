@@ -1,0 +1,62 @@
+import pandas as pd
+
+def run():
+    """
+    Validates the 'cleaned_hotel_bookings.csv' dataset.
+    """
+
+    try:
+        df = pd.read_csv("cleaned_hotel_bookings.csv")
+    except FileNotFoundError:
+        raise FileNotFoundError("The file 'cleaned_hotel_bookings.csv' was not found.")
+    except Exception as e:
+        raise Exception(f"An error occurred while reading the CSV file: {e}")
+
+    required_columns = ['hotel', 'is_canceled', 'lead_time', 'arrival_date_year',
+                           'arrival_date_month', 'arrival_date_week_number',
+                           'arrival_date_day_of_month', 'stays_in_weekend_nights',
+                           'stays_in_week_nights', 'adults', 'children', 'babies', 'meal',
+                           'country', 'market_segment', 'distribution_channel',
+                           'is_repeated_guest', 'previous_cancellations',
+                           'previous_bookings_not_canceled', 'reserved_room_type',
+                           'assigned_room_type', 'booking_changes', 'deposit_type', 'agent',
+                           'company', 'days_in_waiting_list', 'customer_type', 'adr',
+                           'required_car_parking_spaces', 'total_of_special_requests',
+                           'reservation_status', 'reservation_status_date']
+
+    missing_columns = set(required_columns) - set(df.columns)
+    if missing_columns:
+        raise ValueError(f"Missing required columns: {missing_columns}")
+
+    target_column = 'is_canceled'
+    if target_column not in df.columns:
+        raise ValueError(f"Target column '{target_column}' is missing.")
+
+    # Check for missing values in numerical and categorical features
+    numerical_cols = df.select_dtypes(include=['number']).columns
+    categorical_cols = df.select_dtypes(include=['object']).columns
+
+    for col in numerical_cols:
+        if df[col].isnull().sum() > 0:
+            print(f"Warning: Missing values found in numerical column '{col}': {df[col].isnull().sum()}")
+
+    for col in categorical_cols:
+        if df[col].isnull().sum() > 0:
+             print(f"Warning: Missing values found in categorical column '{col}': {df[col].isnull().sum()}")
+    
+    # Check data types
+    for col in categorical_cols:
+        if df[col].dtype not in ['object', 'string']:
+            raise TypeError(f"Categorical column '{col}' should be of string/object type.")
+
+    for col in numerical_cols:
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            raise TypeError(f"Numerical column '{col}' should be numeric.")
+
+    # Check target variable imbalance (example: 80/20 split)
+    target_distribution = df[target_column].value_counts(normalize=True)
+    if len(target_distribution) > 1:
+        if target_distribution.iloc[0] < 0.2 or target_distribution.iloc[0] > 0.8:
+            print(f"Warning: Target variable '{target_column}' is imbalanced: {target_distribution.to_dict()}")
+
+    return "Valid dataset"
